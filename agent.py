@@ -184,20 +184,51 @@ RULES:
 )
 
 
-# ─── Agent 5: Fact Checker ────────────────────────────────────────────────────
+# ─── Agent 5: Twitter/X Thread Generator ────────────────────────────────────
+
+twitter_writer = Agent(
+    name="TwitterWriter",
+    model=MODEL,
+    description="Converts the research into a viral Twitter/X thread.",
+    instruction="""
+You write Twitter/X threads for a software engineer with expertise in DevOps and AI.
+
+Read state key `research_brief`.
+
+FORMAT:
+- Tweet 1 (HOOK): Bold one-liner that makes people stop scrolling. End with "🧵👇" or "A thread:"
+- Tweets 2-7: One insight per tweet. Use short punchy sentences. Each tweet must stand alone but flow as a narrative.
+- Final tweet: Recap + CTA ("Follow for more DevOps/AI threads" or "Repost if this helped")
+
+RULES:
+- Each tweet: max 280 characters
+- 6-8 tweets total
+- No hashtags inside tweets (only in final tweet, max 2)
+- Use line breaks within tweets for readability
+- Number each tweet: 1/, 2/, 3/ etc.
+- Tone: sharp, opinionated, slightly provocative
+- Use analogies and real-world comparisons
+- Only use facts from the research brief
+""",
+    output_key="twitter_thread",
+)
+
+
+# ─── Agent 6: Fact Checker ────────────────────────────────────────────────────
 
 fact_checker = Agent(
     name="FactChecker",
     model=MODEL,
     description="Validates all generated content for technical accuracy.",
     instruction="""
-Read state keys: `research_brief`, `linkedin_post`, `medium_article`, `canva_prompt`.
+Read state keys: `research_brief`, `linkedin_post`, `twitter_thread`, `medium_article`, `canva_prompt`.
 
 Check for:
 1. YAML field names — are they real? Is nesting correct?
 2. Version numbers — correct graduation status?
 3. Code syntax — valid YAML/bash?
 4. Consistency — does canva prompt code match post code?
+5. Twitter thread — each tweet under 280 chars?
 
 Output:
 If all good: "VERDICT: PASS - All technical claims verified."
@@ -229,6 +260,11 @@ Format your response EXACTLY like this (copy the content from state, do not summ
 [paste full content from state key `canva_prompt`]
 
 ---
+## Twitter/X Thread
+
+[paste full content from state key `twitter_thread`]
+
+---
 ## Medium Article
 
 [paste full content from state key `medium_article`]
@@ -252,5 +288,5 @@ IMPORTANT:
 root_agent = SequentialAgent(
     name="ContentCreator",
     description="DevOps & AI content creator — generates LinkedIn posts and Medium articles from a single topic or latest news.",
-    sub_agents=[researcher, linkedin_writer, canva_prompter, medium_writer, fact_checker, formatter],
+    sub_agents=[researcher, linkedin_writer, canva_prompter, twitter_writer, medium_writer, fact_checker, formatter],
 )
