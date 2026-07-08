@@ -36,6 +36,10 @@ cp .env.example .env
 # Opens ADK Web UI at http://localhost:8000
 ```
 
+## Screenshot
+
+![ADK Web UI — LinkedIn post generation with Canva image prompt](docs/adk-web-ui.png)
+
 ## Usage
 
 In the ADK Web UI, try prompts like:
