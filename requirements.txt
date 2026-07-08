@@ -1,0 +1,4 @@
+google-adk==2.2.0
+python-dotenv
+litellm
+defusedxml
