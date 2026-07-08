@@ -24,7 +24,7 @@ Topic → Researcher → LinkedIn Writer → Canva Prompter → Twitter Writer �
 
 ```bash
 # 1. Clone and setup
-git clone https://github.com/shubhamarora/content-creator.git
+git clone https://github.com/ShubhamArora073/content-creator.git
 cd content-creator
 
 # 2. Configure
